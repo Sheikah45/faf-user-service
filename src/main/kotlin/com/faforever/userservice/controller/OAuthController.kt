@@ -20,6 +20,7 @@ import org.springframework.web.server.ServerWebExchange
 import org.springframework.web.util.UriComponentsBuilder
 import reactor.core.publisher.Mono
 import java.net.URI
+import java.time.OffsetDateTime
 
 @Controller
 class OAuthController(
@@ -114,4 +115,15 @@ class OAuthController(
         }.flatMap { redirectUrl ->
             redirect(response, redirectUrl)
         }
+
+    @GetMapping("ban")
+    fun showBan(
+        request: ServerHttpRequest,
+        model: Model,
+    ): Mono<Rendering> {
+        model.addAttribute("permanentBan", false)
+        model.addAttribute("banReason", "Bad Behavior")
+        model.addAttribute("banExpiration", OffsetDateTime.MAX)
+        return Mono.just(Rendering.view("ban").build())
+    }
 }
